@@ -15,7 +15,7 @@
           <el-input v-model="formLabelAlign.password" />
         </el-form-item>
         <el-button type="primary" link class="forget">忘记密码？</el-button>
-        <el-button type="primary" class="submit">立即登录</el-button>
+        <el-button type="primary" class="submit" @click="login">立即登录</el-button>
       </el-form>
     </div>
   </div>
@@ -23,6 +23,7 @@
 
 <script  setup>
 import { ref, toRefs, reactive } from "vue"
+import { useRouter, useRoute } from 'vue-router'
 import zionMdapi from 'zion-mdapi';
 
 const formLabelAlign = reactive({
@@ -45,6 +46,10 @@ const formLabelAlign = reactive({
 //   })
 //   console.log(user);
 // }
+const router = useRouter()
+const login = () => {
+  router.push({ name: 'index', })
+}
 </script>
 
 <style lang="scss" scoped>
