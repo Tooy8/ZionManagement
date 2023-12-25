@@ -2,20 +2,20 @@
     <el-tabs v-model="activeName" class="demo-tabs">
         <el-tab-pane label="用户管理" name="first">User</el-tab-pane>
         <el-tab-pane label="订单管理" name="second">
-            <Order />
+            <OrderManagement />
         </el-tab-pane>
     </el-tabs>
 </template>
 <script setup>
 
 import { ref } from 'vue'
-import Order from '../components/Order.vue'
+import OrderManagement from '../components/OrderManagement.vue'
 const activeName = ref('first')
 </script>
 <script>
 export default {
     components: {
-        Order
+        OrderManagement
     }
 }
 </script>
