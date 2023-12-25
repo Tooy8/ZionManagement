@@ -1,7 +1,7 @@
 <template>
     <el-tabs v-model="activeName" class="demo-tabs">
-        <el-tab-pane label="User" name="first">User</el-tab-pane>
-        <el-tab-pane label="Config" name="second">
+        <el-tab-pane label="用户管理" name="first">User</el-tab-pane>
+        <el-tab-pane label="订单管理" name="second">
             <Order />
         </el-tab-pane>
     </el-tabs>
@@ -25,6 +25,14 @@ export default {
     color: #6b778c;
     font-size: 32px;
     font-weight: 600;
+}
+
+.demo-tabs {
+    height: 80vh;
+}
+
+.el-tabs__content {
+    height: 100%;
 }
 </style>
   

@@ -1,5 +1,6 @@
 <template>
     <p class="title">订单管理</p>
+    <!-- 搜索表单 -->
     <div class="search">
         <el-form :inline="true" :model="formInline" class="demo-form-inline">
             <el-form-item label="订单编号">
@@ -29,12 +30,16 @@
             </el-form-item>
         </el-form>
     </div>
+
+    <!-- 表格 -->
     <el-table ref="multipleTableRef" :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" />
         <el-table-column label="订单编号" width="190">
             <template #default="scope">{{ scope.row.orderNum }}</template>
         </el-table-column>
-        <el-table-column property="name" label="客户姓名" width="140" />
+        <el-table-column label="客户姓名" width="140">
+            <template #default="scope">{{ scope.row.name }}</template>
+        </el-table-column>
         <el-table-column label="联系方式" width="190">
             <template #default="scope">{{ scope.row.number }}</template>
         </el-table-column>
@@ -50,8 +55,9 @@
         <el-table-column label="下单时间" width="200">
             <template #default="scope">{{ scope.row.orderTime }}</template>
         </el-table-column>
-
-        <el-table-column property="status" label="订单进度" show-overflow-tooltip />
+        <el-table-column label="订单进度" show-overflow-tooltip>
+            <template #default="scope">{{ scope.row.status }}</template>
+        </el-table-column>
 
         <el-table-column fixed="right" label="操作" width="220">
             <template #default>
@@ -60,8 +66,14 @@
                 <el-button link type="primary" size="small">删除</el-button>
             </template>
         </el-table-column>
-
     </el-table>
+
+    <!-- 分页器 -->
+    <div class="paging">
+        <el-pagination v-model:current-page="currentPage4" v-model:page-size="pageSize4" :page-sizes="[2, 4, 6, 8]" small
+            background layout="total, prev, pager, next,sizes, jumper" :total="40" @size-change="handleSizeChange"
+            @current-change="handleCurrentChange" />
+    </div>
 </template>
   
 <script  setup>
@@ -102,16 +114,26 @@ const tableData = [
         status: '已完成'
     },
     {
-        orderNum: '12345612345',
-        name: '王刚',
+        orderNum: '65342112345',
+        name: '小明',
         number: "13194210403",
-        address: '四川省xx和平花园1单元202室内',
+        address: '湖南省xx和平花园1单元202室内',
         appointment: "2016-05-08 16:00",
-        content: '空调安装',
+        content: '配地暖安装',
         orderTime: '2016-05-03',
-        status: '已完成'
+        status: '待分配'
     }
 ]
+
+//分页器操作
+const currentPage4 = ref(4)
+const pageSize4 = ref(2)
+const handleSizeChange = () => {
+    console.log(1)
+}
+const handleCurrentChange = () => {
+    console.log(2)
+}
 </script>
   
 <style lang="scss">
@@ -128,5 +150,12 @@ const tableData = [
 .title {
     font-size: 17px;
     margin-top: 0px;
+}
+
+.paging {
+    position: absolute;
+    top: 90%;
+    left: 50%;
+    transform: translate(-50%);
 }
 </style>
