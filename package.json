@@ -1,0 +1,29 @@
+{
+  "name": "vue-project",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test:unit": "vitest",
+    "start": "cd node_modules/zion-mdapi && npm start",
+    "test": "cd node_modules/zion-mdapi && npm test"
+  },
+  "dependencies": {
+    "element-plus": "^2.4.4",
+    "scss": "^0.2.4",
+    "vue": "^3.3.11",
+    "vue-router": "^4.2.5",
+    "zion-mdapi": "^2.0.5"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.5.2",
+    "@vue/test-utils": "^2.4.3",
+    "jsdom": "^23.0.1",
+    "sass": "^1.69.5",
+    "vite": "^5.0.10",
+    "vitest": "^1.0.4"
+  }
+}
