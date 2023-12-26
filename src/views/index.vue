@@ -28,7 +28,7 @@ export default {
 }
 
 .demo-tabs {
-    height: 80vh;
+    height: auto;
 }
 
 .el-tabs__content {
