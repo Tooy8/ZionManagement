@@ -1,5 +1,5 @@
 <template>
-    <p class="title">订单管理 </p>
+    <div class="title">订单管理 </div>
     <!-- 订单管理 -->
     <div class="management">
         <!-- 搜索订单 -->
@@ -9,16 +9,17 @@
                     <el-input v-model="formInline.user" placeholder="请输入" clearable />
                 </el-form-item>
                 <el-form-item label="下单时间">
-                    <el-date-picker v-model="formInline.date" type="date" placeholder="请输入" clearable />
+                    <el-date-picker v-model="formInline.date" type="date" placeholder="请输入" clearable
+                        style="width: 280px;" />
                 </el-form-item>
                 <el-form-item label="订单类型">
-                    <el-select v-model="formInline.region" placeholder="空调安装" clearable>
+                    <el-select v-model="formInline.region" placeholder="空调安装" clearable style="width: 280px;">
                         <el-option label="空调安装" value="shanghai" />
                         <el-option label="配地暖安装" value="beijing" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="订单状态">
-                    <el-select v-model="formInline.status" placeholder="待分配" clearable>
+                    <el-select v-model="formInline.status" placeholder="待分配" clearable style="width: 280px;">
                         <el-option label="待分配" value="shanghai" />
                         <el-option label="处理中" value="beijing" />
                         <el-option label="待评价" value="qwe" />
@@ -34,15 +35,15 @@
         </div>
 
         <!-- 订单表格 -->
-        <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
+        <el-table :data="tableData" style="width: 100%;padding:20px 79px 0 79px;" @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="55" />
-            <el-table-column label="订单编号" width="190">
+            <el-table-column label="订单编号" width="170">
                 <template #default="scope">{{ scope.row.orderNum }}</template>
             </el-table-column>
             <el-table-column label="客户姓名" width="140">
                 <template #default="scope">{{ scope.row.name }}</template>
             </el-table-column>
-            <el-table-column label="联系方式" width="190">
+            <el-table-column label="联系方式" width="170">
                 <template #default="scope">{{ scope.row.number }}</template>
             </el-table-column>
             <el-table-column label="安装地址" width="300">
@@ -54,10 +55,10 @@
             <el-table-column label="订单内容" width="170">
                 <template #default="scope">{{ scope.row.content }}</template>
             </el-table-column>
-            <el-table-column label="下单时间" width="200">
+            <el-table-column label="下单时间" width="170">
                 <template #default="scope">{{ scope.row.orderTime }}</template>
             </el-table-column>
-            <el-table-column label="订单进度" show-overflow-tooltip>
+            <el-table-column label="订单进度" width="120">
                 <template #default="scope">{{ scope.row.status }}</template>
             </el-table-column>
 
@@ -153,16 +154,24 @@ const handleCurrentChange = () => {
 .demo-form-inline {
     display: flex;
     justify-content: space-between;
+    margin-top: 40px;
+    margin-left: 70px;
 
     .el-input {
-        --el-input-width: 220px;
+        --el-input-width: 280px;
     }
 }
 
 .title {
-    font-size: 17px;
-    margin-top: 0px;
-    display: inline-block;
+    margin-left: 80px;
+    margin-top: 30px;
+    width: 80px;
+    height: 26px;
+    line-height: 25px;
+    color: rgba(16, 16, 16, 1);
+    font-size: 18px;
+    text-align: left;
+    font-weight: 700;
     cursor: pointer;
 }
 

@@ -48,7 +48,7 @@ const formLabelAlign = reactive({
 // }
 const router = useRouter()
 const login = () => {
-  router.push({ name: 'order', })
+  router.push({ name: 'user', })
 }
 </script>
 

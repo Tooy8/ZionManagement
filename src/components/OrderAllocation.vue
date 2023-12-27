@@ -1,6 +1,8 @@
 <template>
-    <p class="title" @click="handleClick">订单管理 &nbsp;</p>
-    <p class="title">| &nbsp;订单分配</p>
+    <div class="title">
+        <p @click="handleClick">订单管理 &nbsp;</p>
+        <p>| &nbsp;订单分配</p>
+    </div>
 
 
     <!-- 订单详情 -->
@@ -18,14 +20,14 @@
 
                 <el-form-item label="进度">
                     <el-select v-model="formInline.region" placeholder="请输入内容"
-                        :style="{ width: '300px', marginRight: '90px' }" clearable>
+                        :style="{ width: '320px', marginRight: '179px' }" clearable>
                         <el-option label="空调安装" value="shanghai" />
                         <el-option label="配地暖安装" value="beijing" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="工种">
                     <el-select v-model="formInline.status" placeholder="请输入内容"
-                        :style="{ width: '300px', marginRight: '90px' }" clearable>
+                        :style="{ width: '320px', marginRight: '179px' }" clearable>
                         <el-option label=" 待分配" value="shanghai" />
                         <el-option label="处理中" value="beijing" />
                         <el-option label="待评价" value="qwe" />
@@ -34,7 +36,7 @@
                 </el-form-item>
                 <el-form-item label="施工人员">
                     <el-select v-model="formInline.region" placeholder="请输入内容"
-                        :style="{ width: '300px', marginRight: '90px' }" clearable>
+                        :style="{ width: '320px', marginRight: '179px' }" clearable>
                         <el-option label="空调安装" value="shanghai" />
                         <el-option label="配地暖安装" value="beijing" />
                     </el-select>
@@ -62,7 +64,7 @@
         <!-- 订单进度 -->
         <div class="schedule">
             <p>订单进度</p>
-            <el-table :data="scheduleData" style="width: 100%">
+            <el-table :data="scheduleData" style="width: 100%; padding:10px 80px 0px 80px">
                 <el-table-column label="序号" width="150">
                     <template #default="scope">{{ scope.row.num }}</template>
                 </el-table-column>
@@ -84,7 +86,7 @@
                 <el-table-column label="状态" width="200">
                     <template #default="scope">{{ scope.row.status }}</template>
                 </el-table-column>
-                <el-table-column label="现场图片" show-overflow-tooltip>
+                <el-table-column label="现场图片" width="250">
                     <template #default="scope">{{ scope.row.img }}</template>
                 </el-table-column>
 
@@ -166,10 +168,21 @@ const scheduleData = [{
   
 <style lang="scss" scoped>
 .title {
-    font-size: 17px;
-    margin-top: 0px;
-    display: inline-block;
+    margin-left: 80px;
+    margin-top: 30px;
+    width: 180px;
+    height: 26px;
+    line-height: 25px;
+    color: rgba(16, 16, 16, 1);
+    font-size: 18px;
+    text-align: left;
+    font-weight: 700;
     cursor: pointer;
+
+    p {
+        display: inline-block;
+        margin: 0;
+    }
 }
 
 // 订单分配
@@ -177,8 +190,19 @@ const scheduleData = [{
     display: flex;
 
     justify-content: flex-start;
-    margin-left: 30px;
+    margin-left: 93px;
+    padding-top: 20px;
 
+}
+
+.search[data-v-08ebd34f] {
+    margin-bottom: 50px;
+}
+
+//分割线
+.el-divider--horizontal {
+    width: 92%;
+    margin: 20px auto;
 }
 
 .search {
@@ -189,9 +213,13 @@ const scheduleData = [{
 // 订单操作
 .controls {
     p {
-        margin: 0px 0px 0px 30px;
+        margin-left: 93px;
+        margin-top: 22.8px;
+        width: 72px;
+        height: 34.41px;
+        line-height: 25px;
         color: rgba(16, 16, 16, 1);
-        font-size: 18px;
+        font-size: 16px;
         text-align: left;
         font-family: SourceHanSansSC-regular;
     }
@@ -200,10 +228,11 @@ const scheduleData = [{
 
 //订单信息
 .orderInfo {
-    font-size: 15px;
+
+    font-size: 16px;
     display: flex;
     flex-wrap: wrap;
-    margin-left: 50px;
+    margin-left: 100px;
 
     p {
         margin-right: 200px;
@@ -214,9 +243,9 @@ const scheduleData = [{
 // 订单进度
 .schedule {
     p {
-        margin: 0px 0px 30px 30px;
+        margin: 0px 0px 30px 93px;
         color: rgba(16, 16, 16, 1);
-        font-size: 18px;
+        font-size: 16px;
         text-align: left;
         font-family: SourceHanSansSC-regular;
     }

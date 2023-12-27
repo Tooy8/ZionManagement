@@ -1,6 +1,8 @@
 <template>
-    <p class="title" @click="handleClick">订单管理 &nbsp;</p>
-    <p class="title">| &nbsp;订单详情</p>
+    <div class="title">
+        <p @click="handleClick">订单管理 &nbsp;</p>
+        <p>| &nbsp;订单详情</p>
+    </div>
 
 
     <!-- 订单详情 -->
@@ -43,7 +45,7 @@
         <!-- 订单进度 -->
         <div class="schedule">
             <p>订单进度</p>
-            <el-table :data="scheduleData" style="width: 100%">
+            <el-table :data="scheduleData" style="width: 100%'; padding:10px 80px 0px 80px">
                 <el-table-column label="序号" width="150">
                     <template #default="scope">{{ scope.row.num }}</template>
                 </el-table-column>
@@ -53,7 +55,7 @@
                 <el-table-column label="人员" width="190">
                     <template #default="scope">{{ scope.row.name }}</template>
                 </el-table-column>
-                <el-table-column label="联系方式" width="250">
+                <el-table-column label="联系方式" width="220">
                     <template #default="scope">{{ scope.row.number }}</template>
                 </el-table-column>
                 <el-table-column label="施工详情" width="300">
@@ -65,7 +67,7 @@
                 <el-table-column label="状态" width="200">
                     <template #default="scope">{{ scope.row.status }}</template>
                 </el-table-column>
-                <el-table-column label="现场图片" show-overflow-tooltip>
+                <el-table-column label="现场图片" width="100">
                     <template #default="scope">{{ scope.row.img }}</template>
                 </el-table-column>
 
@@ -80,15 +82,15 @@
         </div>
         <!-- 服务评价 -->
         <div class="evaluate" v-if="orderStatus == '已完成'">
-            <el-divider />
             <p>服务评价</p>
+            <el-divider />
             <div class="mark">
                 <p>服务打分 :</p><el-rate v-model="mark" allow-half />
             </div>
             <div class="imgEvaluate">
                 <p>服务非常好，非常满意</p>
-                <img src="../assets/background.png" alt="" style="height: 120px;width: 250px;margin-right: 20px;">
-                <img src="../assets/background.png" alt="" style="height: 120px;width: 250px;margin-right: 20px;">
+                <img src="../assets/background.png" alt="" style="height: 130px;width: 200px;margin-right: 20px;">
+                <img src="../assets/background.png" alt="" style="height: 130px;width: 200px;margin-right: 20px;">
 
             </div>
         </div>
@@ -169,10 +171,21 @@ const mark = ref(4)
 // 订单详情
 // 订单操作
 .title {
-    font-size: 17px;
-    margin-top: 0px;
-    display: inline-block;
+    margin-left: 80px;
+    margin-top: 30px;
+    width: 180px;
+    height: 26px;
+    line-height: 25px;
+    color: rgba(16, 16, 16, 1);
+    font-size: 18px;
+    text-align: left;
+    font-weight: 700;
     cursor: pointer;
+
+    p {
+        display: inline-block;
+        margin: 0;
+    }
 }
 
 .controls {
@@ -180,15 +193,14 @@ const mark = ref(4)
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 10px;
-    margin-bottom: -10px;
+    padding: 40px 107px 0px 107px;
 
     .controls_left {
         display: flex;
         align-items: center;
 
         p {
-            margin: 0px 30px 0px 20px
+            margin: 0px 27px 0px 0px
         }
 
         .el-button:hover {
@@ -198,13 +210,19 @@ const mark = ref(4)
     }
 }
 
+//分割线
+.el-divider--horizontal {
+    width: 92%;
+    margin: 20px auto;
+}
+
 //订单信息
 .orderInfo {
     font-size: 15px;
     display: flex;
     flex-wrap: wrap;
+    margin-left: 109px;
 
-    // justify-content: space-between;
 
     p {
         margin-right: 200px;
@@ -216,7 +234,7 @@ const mark = ref(4)
 .schedule {
     p {
         font-size: 16px;
-        margin-left: 20px;
+        margin-left: 107px;
     }
 }
 
@@ -226,21 +244,28 @@ const mark = ref(4)
     font-size: 16px;
 
     p {
-        margin-left: 20px;
+        font-size: 16px;
+        margin-left: 107px;
     }
 
     .mark {
         font-size: 14px;
-        margin-left: 25px;
         display: flex;
-        align-items: center
+        align-items: center;
+
+
     }
 
     .imgEvaluate {
         font-size: 16px;
-        margin-left: 25px;
+        margin-left: 110px;
         height: 100%;
         width: 100%;
+
+        p {
+            margin-left: 0px;
+
+        }
     }
 }
 </style>
