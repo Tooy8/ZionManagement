@@ -2,7 +2,7 @@
     <el-tabs v-model="activeName" class="demo-tabs">
         <el-tab-pane label="用户管理" name="first">User</el-tab-pane>
         <el-tab-pane label="订单管理" name="second">
-            <OrderManagement />
+            <router-view></router-view>
         </el-tab-pane>
     </el-tabs>
 </template>
@@ -19,7 +19,7 @@ export default {
     }
 }
 </script>
-<style>
+<style >
 .demo-tabs>.el-tabs__content {
     padding: 32px;
     color: #6b778c;

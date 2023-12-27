@@ -7,7 +7,7 @@
 
       </el-radio-group>
       <div style="margin: 20px" />
-      <el-form label-position="top" label-width="100px" :model="formLabelAlign" style="max-width: 240px" class="info">
+      <el-form label-position="top" label-width="100px" :model="formLabelAlign" style="max-width: 375px" class="info">
         <el-form-item label="登录账户">
           <el-input v-model="formLabelAlign.name" />
         </el-form-item>
@@ -48,7 +48,7 @@ const formLabelAlign = reactive({
 // }
 const router = useRouter()
 const login = () => {
-  router.push({ name: 'index', })
+  router.push({ name: 'order', })
 }
 </script>
 
@@ -59,7 +59,7 @@ const login = () => {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('@/assets/background.jpg');
+  background-image: url('@/assets/background.png');
   background-size: cover;
   background-position: center;
   display: flex;
@@ -68,44 +68,71 @@ const login = () => {
 }
 
 .loginForm {
-  width: 350px;
-  height: 360px;
+  width: 551px;
+  height: 554px;
+  box-sizing: border-box;
   background-color: #fff;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  border-radius: 10px;
+  border-radius: 20px 20px 0px 0px;
   border: 1px solid rgb(65, 127, 250);
   position: absolute;
-  left: 300px;
+  left: 186px;
+  bottom: 180px;
 
   .title {
-    background-color: rgb(65, 127, 250);
-    height: 60px;
-    color: aliceblue;
+    left: 187px;
+    top: 236px;
+    width: 551px;
+    height: 88px;
+    line-height: 88px;
+    border-radius: 20px 20px 0px 0px;
+    background-color: rgba(65, 127, 250, 1);
+    color: rgba(255, 255, 255, 1);
+    font-size: 28px;
     text-align: center;
-    line-height: 60px;
-    border-radius: 10px 10px 0 0;
+    font-family: Roboto;
+    border: 1px solid rgba(65, 127, 250, 1);
   }
 
   .info {
     display: flex;
     flex-direction: column;
-    margin-left: 50px;
+    margin-left: 87px;
     position: relative;
+    margin-top: 38px;
 
+
+
+    .el-input {
+      height: 45px;
+      color: rgba(0, 0, 0, 1);
+      color: rgba(16, 16, 16, 1);
+      font-size: 14px;
+      text-align: center;
+      font-family: Roboto;
+    }
 
     .forget {
       position: absolute;
-      top: 150px;
+      top: 185px;
       right: 0px;
-      font-size: small;
+      color: rgba(6, 63, 248, 1);
+      font-size: 18px;
+      text-align: left;
+      font-family: SourceHanSansSC-regular;
     }
 
     .submit {
-      margin-top: 20px;
+      margin-top: 70px;
       width: 100%;
       margin-left: 0px;
+      height: 52px;
+      line-height: 20px;
+      border-radius: 10px;
+      background-color: rgba(65, 127, 250, 1);
+      font-size: 14px;
     }
   }
 }
