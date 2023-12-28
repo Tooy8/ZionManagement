@@ -64,7 +64,7 @@
                 <el-table-column label="完成时间" width="200">
                     <template #default="scope">{{ scope.row.finishTime }}</template>
                 </el-table-column>
-                <el-table-column label="状态" width="200">
+                <el-table-column label="状态" width="180">
                     <template #default="scope">{{ scope.row.status }}</template>
                 </el-table-column>
                 <el-table-column label="现场图片" width="100">

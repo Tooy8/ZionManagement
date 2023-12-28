@@ -35,8 +35,7 @@
         </div>
 
         <!-- 订单表格 -->
-        <el-table :data="tableData" style="width: 100%;padding:20px 79px 0 79px;" @selection-change="handleSelectionChange">
-            <el-table-column type="selection" width="55" />
+        <el-table :data="tableData" style="width: 100%;padding:20px 79px 0 79px;">
             <el-table-column label="订单编号" width="170">
                 <template #default="scope">{{ scope.row.orderNum }}</template>
             </el-table-column>
