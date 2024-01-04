@@ -35,30 +35,31 @@
         </div>
 
         <!-- 订单表格 -->
-        <el-table :data="tableData" style="width: 100%;padding:20px 79px 0 79px;">
+        <el-table :data="tableData.slice((currentPage4 - 1) * pageSize4, currentPage4 * pageSize4)"
+            style="width: 100%;padding:20px 79px 0 79px;">
             <el-table-column label="订单编号" width="170">
-                <template #default="scope">{{ scope.row.orderNum }}</template>
+                <template #default="scope">{{ scope.row.id }}</template>
             </el-table-column>
             <el-table-column label="客户姓名" width="140">
-                <template #default="scope">{{ scope.row.name }}</template>
+                <template #default="scope">{{ scope.row.consignee }}</template>
             </el-table-column>
             <el-table-column label="联系方式" width="170">
-                <template #default="scope">{{ scope.row.number }}</template>
+                <template #default="scope">{{ scope.row.phone }}</template>
             </el-table-column>
             <el-table-column label="安装地址" width="300">
-                <template #default="scope">{{ scope.row.address }}</template>
+                <template #default="scope">{{ scope.row.address_detail }}</template>
             </el-table-column>
             <el-table-column label="预约时间" width="220">
-                <template #default="scope">{{ scope.row.appointment }}</template>
+                <template #default="scope">{{ scope.row.appointment_time }}</template>
             </el-table-column>
             <el-table-column label="订单内容" width="170">
-                <template #default="scope">{{ scope.row.content }}</template>
+                <template #default="scope">{{ scope.row.notes }}</template>
             </el-table-column>
             <el-table-column label="下单时间" width="170">
-                <template #default="scope">{{ scope.row.orderTime }}</template>
+                <template #default="scope">{{ scope.row.created_at }}</template>
             </el-table-column>
             <el-table-column label="订单进度" width="120">
-                <template #default="scope">{{ scope.row.status }}</template>
+                <template #default="scope">{{ scope.row.process_status }}</template>
             </el-table-column>
 
             <el-table-column fixed="right" label="操作" width="220">
@@ -73,8 +74,8 @@
         <!-- 分页器 -->
         <div class="paging">
             <el-pagination v-model:current-page="currentPage4" v-model:page-size="pageSize4" :page-sizes="[2, 4, 6, 8]"
-                small background layout="total, prev, pager, next,sizes, jumper" :total="40" @size-change="handleSizeChange"
-                @current-change="handleCurrentChange" />
+                small background layout="total, prev, pager, next,sizes, jumper" :total="tableData.length"
+                @size-change="handleSizeChange" @current-change="handleCurrentChange" />
         </div>
     </div>
 </template>
@@ -84,8 +85,6 @@ import { ref, reactive } from 'vue'
 import { ElTable } from 'element-plus'
 import { useRouter, useRoute } from 'vue-router'
 
-
-
 //表单数据
 const formInline = reactive({
     user: '',
@@ -93,6 +92,8 @@ const formInline = reactive({
     date: '',
     status: ''
 })
+// 订单数据
+const tableData = ref([]);
 
 const onSubmit = () => {
     console.log('submit!')
@@ -114,37 +115,44 @@ const handleClick = () => {
 const allocation = () => {
     router.push({ name: 'orderAllocation', })
 }
-const tableData = [
-    {
-        orderNum: '12345612345',
-        name: '王刚',
-        number: "13194210403",
-        address: '四川省xx和平花园1单元202室内',
-        appointment: "2016-05-08 16:00",
-        content: '空调安装',
-        orderTime: '2016-05-03',
-        status: '已完成'
-    },
-    {
-        orderNum: '65342112345',
-        name: '小明',
-        number: "13194210403",
-        address: '湖南省xx和平花园1单元202室内',
-        appointment: "2016-05-08 16:00",
-        content: '配地暖安装',
-        orderTime: '2016-05-03',
-        status: '待分配'
-    }
-]
+//调用接口获取数据
+import zionMdapi from 'zion-mdapi';
+//mdapi
+const mdapi = zionMdapi.init({
+    url: "https://zion-app.functorz.com/zero/omOJrPx6KDl/api/graphql-v2",
+    actionflow_id: "2e2bea0f-43c0-4844-9bd3-75a06c889da9",
+})
+//获取订单数据
+async function getInfo() {
+    const order = await mdapi.nativeQuery({
+        model: "order",
+        fields: [
+            "created_at",
+            "id",
+            "consignee",
+            "phone",
+            "address_detail",
+            "appointment_time",
+            "notes",
+            "process_status"]
+    }).catch((e) => {
+        console.log(e);
+    })
+    tableData.value = order
+    console.log(tableData.value);
+}
+getInfo()
 
 //分页器操作
 const currentPage4 = ref(4)
 const pageSize4 = ref(2)
-const handleSizeChange = () => {
-    console.log(1)
+const handleSizeChange = (size) => {
+    pageSize4.value = size;
+    console.log(pageSize4.value)
 }
-const handleCurrentChange = () => {
-    console.log(2)
+const handleCurrentChange = (currentPage) => {
+    currentPage4.value = currentPage
+    console.log(currentPage4.value)
 }
 
 </script>
