@@ -6,7 +6,7 @@
         <div class="search">
             <el-form :inline="true" :model="formInline" class="demo-form-inline">
                 <el-form-item label="订单编号">
-                    <el-input v-model="formInline.user" placeholder="请输入" clearable />
+                    <el-input v-model="formInline.id" placeholder="请输入" clearable />
                 </el-form-item>
                 <el-form-item label="下单时间">
                     <el-date-picker v-model="formInline.date" type="date" placeholder="请输入" clearable
@@ -14,22 +14,22 @@
                 </el-form-item>
                 <el-form-item label="订单类型">
                     <el-select v-model="formInline.region" placeholder="空调安装" clearable style="width: 280px;">
-                        <el-option label="空调安装" value="shanghai" />
-                        <el-option label="配地暖安装" value="beijing" />
+                        <el-option label="空调安装" value="空调安装" />
+                        <el-option label="配地暖安装" value="配地暖安装" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="订单状态">
                     <el-select v-model="formInline.status" placeholder="待分配" clearable style="width: 280px;">
-                        <el-option label="待分配" value="shanghai" />
-                        <el-option label="处理中" value="beijing" />
-                        <el-option label="待评价" value="qwe" />
-                        <el-option label="已完成" value="asd" />
+                        <el-option label="待分配" value="待分配" />
+                        <el-option label="处理中" value="处理中" />
+                        <el-option label="待评价" value="待评价" />
+                        <el-option label="已完成" value="已完成" />
                     </el-select>
                 </el-form-item>
 
                 <el-form-item>
-                    <el-button type="primary" @click="onSubmit">搜索</el-button>
-                    <el-button @click="onSubmit">重置</el-button>
+                    <el-button type="primary" @click="search">搜索</el-button>
+                    <el-button @click="reset">重置</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -63,10 +63,10 @@
             </el-table-column>
 
             <el-table-column fixed="right" label="操作" width="220">
-                <template #default>
+                <template #default="scope">
                     <el-button link type="primary" size="small" @click="handleClick">查看</el-button>
                     <el-button link type="primary" size="small" @click="allocation">分配</el-button>
-                    <el-button link type="primary" size="small">删除</el-button>
+                    <el-button link type="primary" size="small" @click="deleteOrder(scope)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -87,17 +87,15 @@ import { useRouter, useRoute } from 'vue-router'
 
 //表单数据
 const formInline = reactive({
-    user: '',
-    region: '',
-    date: '',
-    status: ''
+    id: null,
+    region: null,
+    date: null,
+    status: null
 })
 // 订单数据
 const tableData = ref([]);
 
-const onSubmit = () => {
-    console.log('submit!')
-}
+
 
 //表格数据
 const multipleTableRef = ref()
@@ -106,6 +104,15 @@ const multipleSelection = ref([])
 const handleSelectionChange = (val) => {
     multipleSelection.value = val
 }
+
+//调用接口获取数据
+import zionMdapi from 'zion-mdapi';
+//mdapi
+const mdapi = zionMdapi.init({
+    url: "https://zion-app.functorz.com/zero/omOJrPx6KDl/api/graphql-v2",
+    actionflow_id: "2e2bea0f-43c0-4844-9bd3-75a06c889da9",
+})
+
 //查看订单详情
 const router = useRouter()
 const handleClick = () => {
@@ -115,14 +122,26 @@ const handleClick = () => {
 const allocation = () => {
     router.push({ name: 'orderAllocation', })
 }
-//调用接口获取数据
-import zionMdapi from 'zion-mdapi';
-//mdapi
-const mdapi = zionMdapi.init({
-    url: "https://zion-app.functorz.com/zero/omOJrPx6KDl/api/graphql-v2",
-    actionflow_id: "2e2bea0f-43c0-4844-9bd3-75a06c889da9",
-})
-//获取订单数据
+
+//删除订单
+const deleteOrder = (scope) => {
+    const id = scope.row.id
+    async function deleteO() {
+        await mdapi.nativeMutation({
+            operation: "delete_order",
+            //删除id等于当前id的
+            where: { id: { _eq: id } }
+        }).catch((e) => {
+            console.log(e);
+        })
+    }
+    deleteO()
+    //刷新页面
+    location.reload();
+}
+
+
+//获取所有订单数据
 async function getInfo() {
     const order = await mdapi.nativeQuery({
         model: "order",
@@ -142,6 +161,42 @@ async function getInfo() {
     console.log(tableData.value);
 }
 getInfo()
+
+//重置按钮
+const reset = () => {
+    getInfo()
+}
+// 搜索按钮
+const search = () => {
+    searchInfo()
+}
+
+//搜索某些数据
+async function searchInfo() {
+    const order = await mdapi.nativeQuery({
+        model: "order",
+        where: {
+            id: { _eq: formInline.id },
+            created_at: { _eq: formInline.date },
+            notes: { _eq: formInline.region },
+            process_status: { _eq: formInline.status },
+        },
+        fields: [
+            "created_at",
+            "id",
+            "consignee",
+            "phone",
+            "address_detail",
+            "appointment_time",
+            "notes",
+            "process_status"]
+    }).catch((e) => {
+        console.log(e);
+    })
+    tableData.value = order
+    console.log(tableData.value);
+}
+
 
 //分页器操作
 const currentPage4 = ref(4)
