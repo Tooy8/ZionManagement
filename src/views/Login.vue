@@ -1,6 +1,6 @@
 <template>
   <div class="back">
-    <!-- <button @click="getinfo">123</button> -->
+
     <div class='loginForm'>
       <div class="title">安装服务管理后台</div>
       <el-radio-group label="label position">
@@ -12,7 +12,7 @@
           <el-input v-model="formLabelAlign.name" />
         </el-form-item>
         <el-form-item label="账号密码">
-          <el-input v-model="formLabelAlign.password" />
+          <el-input type="password" v-model="formLabelAlign.password" />
         </el-form-item>
         <el-button type="primary" link class="forget">忘记密码？</el-button>
         <el-button type="primary" class="submit" @click="login">立即登录</el-button>
@@ -25,30 +25,55 @@
 import { ref, toRefs, reactive } from "vue"
 import { useRouter, useRoute } from 'vue-router'
 import zionMdapi from 'zion-mdapi';
+import { computed } from 'vue'
+import { useStore } from 'vuex'
+import { ElMessage } from 'element-plus'
 
+const router = useRouter()
+
+// 输入框信息
 const formLabelAlign = reactive({
   name: '',
   password: '',
 });
 
-// const mdapi = zionMdapi.init({
-//   url: "https://zion-app.functorz.com/zero/KrABb5MyoXo/api/graphql-v2",
-//   // actionflow_id: "bf5cd50e-2be3-4331-aab7-8d973212ea95"
-// })
-
-// async function getinfo() {
-//   console.log(mdapi)
-//   const user = await mdapi.nativeQuery({
-//     model: "info",
-//     fields: ["name", "password"]
-//   }).catch(e => {
-//     console.log(e);
-//   })
-//   console.log(user);
-// }
-const router = useRouter()
-const login = () => {
-  router.push({ name: 'user', })
+//mdapi
+const mdapi = zionMdapi.init({
+  url: "https://zion-app.functorz.com/zero/omOJrPx6KDl/api/graphql-v2",
+  actionflow_id: "2e2bea0f-43c0-4844-9bd3-75a06c889da9",
+})
+// 登录操作
+async function login() {
+  const user = await mdapi.callActionflow({
+    actionflow_dir: "/RBAC/",
+    actionflow_name: "RBAC_用户登录",
+    payload: {
+      username: formLabelAlign.name,
+      password: formLabelAlign.password
+    }
+  }).catch(e => {
+    console.log(e);
+  })
+  //清空输入框
+  formLabelAlign.name = ''
+  formLabelAlign.password = ''
+  console.log(user.status);
+  console.log(user);
+  if (user.status == "登录失败") {
+    //消息提示
+    ElMessage({
+      message: '用户名或密码错误',
+      type: 'warning',
+    })
+  } else {
+    //消息提示
+    ElMessage({
+      message: '登录成功',
+      type: 'success',
+    })
+    //路由跳转
+    router.push({ name: 'user', })
+  }
 }
 </script>
 
