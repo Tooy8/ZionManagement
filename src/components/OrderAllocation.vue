@@ -17,31 +17,24 @@
         <!-- 分配 -->
         <div class="search">
             <el-form :inline="true" :model="formInline" class="demo-form-inline">
-
+                <el-form-item label="序号">
+                    <el-input v-model="formInline.idx" placeholder="请输入" :style="{ width: '320px', marginRight: '179px' }"
+                        clearable />
+                </el-form-item>
                 <el-form-item label="进度">
-                    <el-select v-model="formInline.region" placeholder="请输入内容"
-                        :style="{ width: '320px', marginRight: '179px' }" clearable>
-                        <el-option label="空调安装" value="shanghai" />
-                        <el-option label="配地暖安装" value="beijing" />
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="工种">
-                    <el-select v-model="formInline.status" placeholder="请输入内容"
-                        :style="{ width: '320px', marginRight: '179px' }" clearable>
-                        <el-option label=" 待分配" value="shanghai" />
-                        <el-option label="处理中" value="beijing" />
-                        <el-option label="待评价" value="qwe" />
-                        <el-option label="已完成" value="asd" />
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="施工人员">
-                    <el-select v-model="formInline.region" placeholder="请输入内容"
-                        :style="{ width: '320px', marginRight: '179px' }" clearable>
-                        <el-option label="空调安装" value="shanghai" />
-                        <el-option label="配地暖安装" value="beijing" />
-                    </el-select>
+                    <el-input v-model="formInline.name" placeholder="请输入" :style="{ width: '320px', marginRight: '179px' }"
+                        clearable />
                 </el-form-item>
 
+                <el-form-item label="施工人员">
+                    <!-- <el-input v-model="formInline.nickname" placeholder="请输入"
+                        :style="{ width: '320px', marginRight: '79px' }" clearable /> -->
+                    <el-select v-model="formInline.nickname" placeholder="预约中" clearable style="width: 280px;">
+                        <el-option v-for="item in installerName" :label="item.nickname" :value="item.nickname" />
+
+                    </el-select>
+                </el-form-item>
+                <el-button type="primary" @click="allocation">分配</el-button>
             </el-form>
         </div>
         <div class="controls">
@@ -50,15 +43,14 @@
         <el-divider />
         <!-- 订单信息 -->
         <div class="orderInfo">
-            <p>订单编号：{{ orderInfo.orderNum }}</p>
-            <p>下单时间：{{ orderInfo.orderTime }}</p>
-            <p>订单内容：{{ orderInfo.content }}</p>
-            <p>客户姓名：{{ orderInfo.name }}</p>
-            <p>联系电话：{{ orderInfo.number }}</p>
-            <p>安装地址：{{ orderInfo.address }}</p>
-            <p>预约时间：{{ orderInfo.appointment }}</p>
-            <p>备注：{{ orderInfo.remark }}</p>
-            <p>现场图片：{{ orderInfo.img }}</p>
+            <p>订单编号：{{ orderInfo.id }}</p>
+            <p>下单时间：{{ dayjs(orderInfo.created_at).format('YYYY-MM-DD HH:mm:ss') }}</p>
+            <p>订单内容：{{ orderInfo.notes }}</p>
+            <p>客户姓名：{{ orderInfo.consignee }}</p>
+            <p>联系电话：{{ orderInfo.phone }}</p>
+            <p>安装地址：{{ orderInfo.address_detail }}</p>
+            <p>预约时间：{{ dayjs(orderInfo.appointment_time).format('YYYY-MM-DD HH:mm') }}</p>
+            <p>备注：{{ orderInfo.notes }}</p>
         </div>
         <el-divider />
         <!-- 订单进度 -->
@@ -66,30 +58,34 @@
             <p>订单进度</p>
             <el-table :data="scheduleData" style="width: 100%; padding:10px 80px 0px 80px">
                 <el-table-column label="序号" width="150">
-                    <template #default="scope">{{ scope.row.num }}</template>
+                    <template #default="scope">{{ scope.row.idx }}</template>
                 </el-table-column>
-                <el-table-column label="进度" width="160">
-                    <template #default="scope">{{ scope.row.schedule }}</template>
-                </el-table-column>
-                <el-table-column label="人员" width="190">
+                <el-table-column label="进度" width="210">
                     <template #default="scope">{{ scope.row.name }}</template>
                 </el-table-column>
-                <el-table-column label="联系方式" width="250">
-                    <template #default="scope">{{ scope.row.number }}</template>
+                <el-table-column label="人员" width="200">
+                    <template #default="scope">{{ scope.row.installer.nickname }}</template>
                 </el-table-column>
-                <el-table-column label="施工详情" width="300">
+                <el-table-column label="联系方式" width="220">
+                    <template #default="scope">{{ scope.row.installer.mobile }}</template>
+                </el-table-column>
+                <!--<el-table-column label="施工详情" width="300">
                     <template #default="scope">{{ scope.row.address }}</template>
+                </el-table-column> -->
+
+                <el-table-column label="开始时间" width="240">
+                    <template #default="scope">{{ dayjs(scope.row.start_time).format('YYYY-MM-DD:HH') }}</template>
                 </el-table-column>
-                <el-table-column label="完成时间" width="250">
-                    <template #default="scope">{{ scope.row.finishTime }}</template>
+                <el-table-column label="完成时间" width="240">
+                    <template #default="scope">{{ dayjs(scope.row.end_time).format('YYYY-MM-DD:HH') }}</template>
                 </el-table-column>
+                <el-table-column label="备注" width="150">
+                    <template #default="scope">{{ scope.row.notes }}</template>
+                </el-table-column>
+
                 <el-table-column label="状态" width="200">
                     <template #default="scope">{{ scope.row.status }}</template>
                 </el-table-column>
-                <el-table-column label="现场图片" width="250">
-                    <template #default="scope">{{ scope.row.img }}</template>
-                </el-table-column>
-
 
             </el-table>
         </div>
@@ -101,13 +97,21 @@
 import { ref, reactive } from 'vue'
 import { ElTable } from 'element-plus'
 import { useRouter, useRoute } from 'vue-router'
+import dayjs from 'dayjs';
+
+//调用接口获取数据
+import zionMdapi from 'zion-mdapi';
+//mdapi
+const mdapi = zionMdapi.init({
+    url: "https://zion-app.functorz.com/zero/omOJrPx6KDl/api/graphql-v2",
+    actionflow_id: "2e2bea0f-43c0-4844-9bd3-75a06c889da9",
+})
 
 //表单数据
 const formInline = reactive({
-    user: '',
-    region: '',
-    date: '',
-    status: ''
+    name: '',
+    idx: '',
+    nickname: '',
 })
 
 //返回订单管理
@@ -115,54 +119,118 @@ const router = useRouter()
 const handleClick = () => {
     router.push({ name: 'orderManagement', })
 }
+//获取订单编号
+const route = useRoute();
+console.log(route.query.id);
 
-//订单状态
-const orderStatus = ref('处理中')
-//结束订单弹框 
-const centerDialogVisible = ref(false)
-//结束订单操作
-const finish = () => {
-    centerDialogVisible.value = false
-    orderStatus.value = '已完成'
-}
+
 
 //订单信息
-const orderInfo = {
-    orderNum: '65342112345',
-    orderTime: '2016-05-03',
-    content: '配地暖安装',
-    name: '小明',
-    number: "13194210403",
-    address: '湖南省xx和平花园1单元202室内',
-    appointment: "2016-05-08 16:00",
-    remark: '无',
-    img: "无",
-    status: '待分配'
+const orderInfo = ref({})
+
+//根据订单号搜索数据
+async function searchInfo() {
+    const order = await mdapi.nativeQuery({
+        model: "order",
+        where: {
+            id: { _eq: route.query.id },
+        },
+        fields: [
+            "created_at",
+            "id",
+            "consignee",
+            "phone",
+            "address_detail",
+            "appointment_time",
+            "notes",
+            "process_status",
+            "evaluation_star",
+            "evaluation_content",
+            "order_detail{idx img{url}}"
+        ]
+    }).catch((e) => {
+        console.log(e);
+    })
+    //订单信息
+    orderInfo.value = order[0]
 }
+searchInfo()
 //订单进度
-const scheduleData = [{
-    num: '1',
-    schedule: "安装",
-    name: "人员",
-    number: '12334545667',
-    address: '拱墅区和平花园1单元202室内',
-    finishTime: '2023-12-1 12:00',
-    status: '已完成',
-    img: "无",
-},
+//订单进度信息
+const scheduleData = ref([])
+//订单进度信息
+async function getInfo() {
+    const order = await mdapi.query({
+        model: "order_progress",
+        where: {
+            order_order: { _eq: route.query.id },
+        },
+        fields: [
+            "id",
+            "notes",
+            "name",
+            "status",
+            "start_time",
+            "end_time",
+            "installer_installer",
+            "idx",
+            "installer{mobile nickname}",
+        ]
+    })
+    scheduleData.value = order
+    console.log(scheduleData.value);
+}
+getInfo()
 
-{
-    num: '2',
-    schedule: "安装",
-    name: "人员",
-    number: '12334545667',
-    address: '拱墅区和平花园1单元202室内',
-    finishTime: '2023-12-1 12:00',
-    status: '进行中',
-    img: "无",
+const installer_installer = ref()
+//根据师傅昵称查找installer_installer
+async function getinstaller() {
+    const installer = await mdapi.query({
+        model: "installer",
+        where: {
+            nickname: { _eq: formInline.nickname },
+        },
+        fields: [
+            "nickname",
+            "order_progress{name installer_installer}"
+        ]
+    })
+    installer_installer.value = installer[0].order_progress[0].installer_installer
 
-}]
-//修改订单进度
+    console.log(installer_installer.value);
+}
+
+
+//分配操作
+const allocation = async () => {
+    await getinstaller()
+    mdapi.mutation({
+        operation: "insert_order_progress",
+        objects: [{
+            order_order: route.query.id,
+            name: formInline.name,
+            installer_installer: installer_installer.value,
+            idx: formInline.idx,
+            status: "待处理"
+        }],
+    })
+    //刷新页面
+    location.reload();
+}
+
+// 获取所有师傅的名字
+const installerName = ref([])
+const getName = async () => {
+    const name = await mdapi.query({
+        model: "installer",
+        fields: [
+            "nickname",
+        ]
+    })
+    installerName.value = name
+}
+
+getName()
 
 </script>
   

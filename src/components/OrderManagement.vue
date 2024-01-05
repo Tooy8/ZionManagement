@@ -12,17 +12,16 @@
                     <el-date-picker v-model="formInline.date" type="date" placeholder="请输入" clearable
                         style="width: 280px;" />
                 </el-form-item>
-                <el-form-item label="订单类型">
+                <!-- <el-form-item label="订单类型">
                     <el-select v-model="formInline.region" placeholder="空调安装" clearable style="width: 280px;">
                         <el-option label="空调安装" value="空调安装" />
                         <el-option label="配地暖安装" value="配地暖安装" />
                     </el-select>
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item label="订单状态">
-                    <el-select v-model="formInline.status" placeholder="待分配" clearable style="width: 280px;">
-                        <el-option label="待分配" value="待分配" />
-                        <el-option label="处理中" value="处理中" />
-                        <el-option label="待评价" value="待评价" />
+                    <el-select v-model="formInline.status" placeholder="预约中" clearable style="width: 280px;">
+                        <el-option label="预约中" value="预约中" />
+                        <el-option label="进行中" value="进行中" />
                         <el-option label="已完成" value="已完成" />
                     </el-select>
                 </el-form-item>
@@ -50,13 +49,13 @@
                 <template #default="scope">{{ scope.row.address_detail }}</template>
             </el-table-column>
             <el-table-column label="预约时间" width="220">
-                <template #default="scope">{{ scope.row.appointment_time }}</template>
+                <template #default="scope">{{ dayjs(scope.row.appointment_time).format('YYYY-MM-DD:HH') }}</template>
             </el-table-column>
             <el-table-column label="订单内容" width="170">
                 <template #default="scope">{{ scope.row.notes }}</template>
             </el-table-column>
             <el-table-column label="下单时间" width="170">
-                <template #default="scope">{{ scope.row.created_at }}</template>
+                <template #default="scope">{{ dayjs(scope.row.created_at).format('YYYY-MM-DD:HH') }}</template>
             </el-table-column>
             <el-table-column label="订单进度" width="120">
                 <template #default="scope">{{ scope.row.process_status }}</template>
@@ -64,8 +63,9 @@
 
             <el-table-column fixed="right" label="操作" width="220">
                 <template #default="scope">
-                    <el-button link type="primary" size="small" @click="handleClick">查看</el-button>
-                    <el-button link type="primary" size="small" @click="allocation">分配</el-button>
+                    <el-button link type="primary" size="small" @click="details(scope)">查看</el-button>
+                    <el-button link type="primary" size="small" @click="allocation(scope)"
+                        v-if="scope.row.process_status !== '已完成'">分配</el-button>
                     <el-button link type="primary" size="small" @click="deleteOrder(scope)">删除</el-button>
                 </template>
             </el-table-column>
@@ -84,6 +84,7 @@
 import { ref, reactive } from 'vue'
 import { ElTable } from 'element-plus'
 import { useRouter, useRoute } from 'vue-router'
+import dayjs from 'dayjs';
 
 //表单数据
 const formInline = reactive({
@@ -115,12 +116,12 @@ const mdapi = zionMdapi.init({
 
 //查看订单详情
 const router = useRouter()
-const handleClick = () => {
-    router.push({ name: 'orderDetails', })
+const details = (scope) => {
+    router.push({ name: 'orderDetails', query: { id: scope.row.id } })
 }
 //跳转分配
-const allocation = () => {
-    router.push({ name: 'orderAllocation', })
+const allocation = (scope) => {
+    router.push({ name: 'orderAllocation', query: { id: scope.row.id } })
 }
 
 //删除订单
@@ -199,7 +200,7 @@ async function searchInfo() {
 
 
 //分页器操作
-const currentPage4 = ref(4)
+const currentPage4 = ref(1)
 const pageSize4 = ref(2)
 const handleSizeChange = (size) => {
     pageSize4.value = size;
