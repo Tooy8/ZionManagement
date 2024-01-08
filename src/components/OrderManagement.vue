@@ -6,12 +6,17 @@
         <div class="search">
             <el-form :inline="true" :model="formInline" class="demo-form-inline">
                 <el-form-item label="订单编号">
-                    <el-input v-model="formInline.id" placeholder="请输入" clearable />
+                    <el-input v-model="formInline.id" placeholder="请输入" clearable @clear="idClear" />
                 </el-form-item>
-                <el-form-item label="下单时间">
+                <!-- <el-form-item label="下单时间">
                     <el-date-picker v-model="formInline.date" type="date" placeholder="请输入" clearable
                         style="width: 280px;" />
+                </el-form-item> -->
+
+                <el-form-item label="订单内容">
+                    <el-input v-model="formInline.region" placeholder="请输入" clearable @clear="regionClear" />
                 </el-form-item>
+
                 <!-- <el-form-item label="订单类型">
                     <el-select v-model="formInline.region" placeholder="空调安装" clearable style="width: 280px;">
                         <el-option label="空调安装" value="空调安装" />
@@ -19,7 +24,8 @@
                     </el-select>
                 </el-form-item> -->
                 <el-form-item label="订单状态">
-                    <el-select v-model="formInline.status" placeholder="预约中" clearable style="width: 280px;">
+                    <el-select v-model="formInline.status" placeholder="预约中" clearable style="width: 280px;"
+                        @clear="statusClear">
                         <el-option label="预约中" value="预约中" />
                         <el-option label="进行中" value="进行中" />
                         <el-option label="已完成" value="已完成" />
@@ -49,13 +55,13 @@
                 <template #default="scope">{{ scope.row.address_detail }}</template>
             </el-table-column>
             <el-table-column label="预约时间" width="220">
-                <template #default="scope">{{ dayjs(scope.row.appointment_time).format('YYYY-MM-DD:HH') }}</template>
+                <template #default="scope">{{ dayjs(scope.row.appointment_time).format('YYYY-MM-DD HH:mm') }}</template>
             </el-table-column>
             <el-table-column label="订单内容" width="170">
                 <template #default="scope">{{ scope.row.notes }}</template>
             </el-table-column>
             <el-table-column label="下单时间" width="170">
-                <template #default="scope">{{ dayjs(scope.row.created_at).format('YYYY-MM-DD:HH') }}</template>
+                <template #default="scope">{{ dayjs(scope.row.created_at).format('YYYY-MM-DD HH:mm') }}</template>
             </el-table-column>
             <el-table-column label="订单进度" width="120">
                 <template #default="scope">{{ scope.row.process_status }}</template>
@@ -163,9 +169,27 @@ async function getInfo() {
 }
 getInfo()
 
+// 清空输入框
+const idClear = () => {
+    formInline.id = null
+}
+const statusClear = () => {
+    formInline.status = null
+}
+const regionClear = () => {
+    formInline.region = null
+}
+
+
 //重置按钮
 const reset = () => {
     getInfo()
+    // 清空输入框
+    formInline.id = null
+    formInline.status = null
+    // formInline.data = null
+    formInline.region = null
+
 }
 // 搜索按钮
 const search = () => {
@@ -178,7 +202,7 @@ async function searchInfo() {
         model: "order",
         where: {
             id: { _eq: formInline.id },
-            created_at: { _eq: formInline.date },
+            // created_at: { _eq: formInline.date },
             notes: { _eq: formInline.region },
             process_status: { _eq: formInline.status },
         },
@@ -201,7 +225,7 @@ async function searchInfo() {
 
 //分页器操作
 const currentPage4 = ref(1)
-const pageSize4 = ref(2)
+const pageSize4 = ref(8)
 const handleSizeChange = (size) => {
     pageSize4.value = size;
     console.log(pageSize4.value)

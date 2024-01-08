@@ -29,7 +29,7 @@
                 <el-form-item label="施工人员">
                     <!-- <el-input v-model="formInline.nickname" placeholder="请输入"
                         :style="{ width: '320px', marginRight: '79px' }" clearable /> -->
-                    <el-select v-model="formInline.nickname" placeholder="预约中" clearable style="width: 280px;">
+                    <el-select v-model="formInline.nickname" placeholder="请选择" clearable style="width: 280px;">
                         <el-option v-for="item in installerName" :label="item.nickname" :value="item.nickname" />
 
                     </el-select>
@@ -204,6 +204,18 @@ async function getinstaller() {
 //分配操作
 const allocation = async () => {
     await getinstaller()
+
+    // 修改订单状态为进行中
+    mdapi.mutation({
+        operation: "update_order",
+        where: {
+            id: { _eq: route.query.id },
+        },
+        _set: {
+            process_status: "进行中"
+        }
+    })
+    //新增订单进程
     mdapi.mutation({
         operation: "insert_order_progress",
         objects: [{
@@ -214,6 +226,7 @@ const allocation = async () => {
             status: "待处理"
         }],
     })
+
     //刷新页面
     location.reload();
 }

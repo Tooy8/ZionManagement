@@ -14,7 +14,7 @@
         <el-form-item label="账号密码">
           <el-input type="password" v-model="formLabelAlign.password" />
         </el-form-item>
-        <el-button type="primary" link class="forget">忘记密码？</el-button>
+        <!-- <el-button type="primary" link class="forget">忘记密码？</el-button> -->
         <el-button type="primary" class="submit" @click="login">立即登录</el-button>
       </el-form>
     </div>

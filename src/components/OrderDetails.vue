@@ -82,7 +82,7 @@
                 <el-table-column fixed="right" label="操作" width="220">
                     <template #default="scope">
                         <el-button link type="primary" size="small" @click="changeSchedule">修改</el-button>
-                        <el-button link type="primary" size="small" v-if="scope.row.status !== '已处理'"
+                        <el-button link type="primary" size="small" v-if="scope.row.status.trim() !== '已处理'"
                             @click="allocation">分配</el-button>
                     </template>
                 </el-table-column>
@@ -93,12 +93,17 @@
             <p>服务评价</p>
             <el-divider />
             <div class="mark">
-                <p>服务打分 :</p><el-rate v-model="mark" allow-half />
+                <p>服务打分 :</p><el-rate v-model="mark" allow-half disabled />
             </div>
             <div class="imgEvaluate">
                 <p>{{ orderInfo.evaluation_content }}</p>
-                <img src="../assets/background.png" alt="" style="height: 130px;width: 200px;margin-right: 20px;">
-                <img src="../assets/background.png" alt="" style="height: 130px;width: 200px;margin-right: 20px;">
+                <template v-if="orderInfo.order_detail">
+                    <div v-for="item in orderInfo.order_detail" style="display:inline-block">
+                        <img :src="item.img.url" alt=""
+                            style="height: 160px;width: 200px;margin-right: 20px; object-fit: cover">
+                    </div>
+                </template>
+
 
             </div>
         </div>
@@ -162,6 +167,7 @@ async function searchInfo() {
     orderStatus.value = orderInfo.value.process_status
     // 评分
     mark.value = orderInfo.value.evaluation_star
+    console.log(order);
 }
 searchInfo()
 
