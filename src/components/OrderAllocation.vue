@@ -50,7 +50,7 @@
             <p>联系电话：{{ orderInfo.phone }}</p>
             <p>安装地址：{{ orderInfo.address_detail }}</p>
             <p>预约时间：{{ dayjs(orderInfo.appointment_time).format('YYYY-MM-DD HH:mm') }}</p>
-            <p>备注：{{ orderInfo.notes }}</p>
+            <!-- <p>备注：{{ orderInfo.notes }}</p> -->
         </div>
         <el-divider />
         <!-- 订单进度 -->
