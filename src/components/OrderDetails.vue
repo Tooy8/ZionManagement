@@ -45,6 +45,26 @@
         <!-- 订单进度 -->
         <div class="schedule">
             <p>订单进度</p>
+            <!-- 修改订单进度 -->
+            <div class="change" v-show="showChange">
+                <el-form-item label="序号">
+                    <el-input v-model="changeForm.idx" placeholder="请输入" :style="{ width: '320px', marginRight: '179px' }"
+                        clearable />
+                </el-form-item>
+                <el-form-item label="进度">
+                    <el-input v-model="changeForm.name" placeholder="请输入" :style="{ width: '320px', marginRight: '179px' }"
+                        clearable />
+                </el-form-item>
+
+                <el-form-item label="施工人员">
+                    <el-select v-model="changeForm.nickname" placeholder="请选择" clearable
+                        :style="{ width: '320px', marginRight: '59px' }">
+                        <el-option v-for="item in installerName" :label="item.nickname" :value="item.nickname" />
+                    </el-select>
+                </el-form-item>
+                <el-button type="primary" @click="changeButton">修改</el-button>
+                <el-button @click="changeCancel">取消</el-button>
+            </div>
             <el-table :data="scheduleData" style="width: 100%'; padding:10px 80px 0px 80px">
                 <el-table-column label="序号" width="150">
                     <template #default="scope">{{ scope.row.idx }}</template>
@@ -81,7 +101,7 @@
 
                 <el-table-column fixed="right" label="操作" width="220">
                     <template #default="scope">
-                        <el-button link type="primary" size="small" @click="changeSchedule">修改</el-button>
+                        <el-button link type="primary" size="small" @click="changeSchedule(scope)">修改</el-button>
                         <el-button link type="primary" size="small" v-if="scope.row.status.trim() !== '已处理'"
                             @click="allocation">分配</el-button>
                     </template>
@@ -202,11 +222,51 @@ const orderInfo = ref({})
 
 //订单进度信息
 const scheduleData = ref([])
-
+//要修改的 installer_installer
+const installer_installer = ref()
+//要修改的订单进度的id
+const progressId = ref()
 //修改订单进度
-const changeSchedule = () => {
-    console.log("changeSchedule");
+const showChange = ref(false)
+//取消
+const changeCancel = () => {
+    showChange.value = false
 }
+//点击表格中的修改按钮
+const changeSchedule = (scope) => {
+    changeForm.idx = scope.row.idx
+    changeForm.name = scope.row.name
+    changeForm.nickname = scope.row.installer.nickname
+    progressId.value = scope.row.id
+    showChange.value = true
+    console.log(installer_installer.value);
+    console.log(scope);
+}
+//修改
+const changeButton = async () => {
+    await getinstaller()
+    mdapi.mutation({
+        operation: "update_order_progress",
+        where: {
+            id: { _eq: progressId.value },
+        },
+        _set: {
+            idx: changeForm.idx,
+            name: changeForm.name,
+            installer_installer: installer_installer.value
+        }
+    })
+    showChange.value = false
+    getInfo()
+    //刷新页面
+    location.reload();
+}
+//修改订单进度信息
+const changeForm = reactive({
+    idx: "",
+    name: "",
+    nickname: ""
+})
 //订单进度信息
 async function getInfo() {
     const order = await mdapi.query({
@@ -231,6 +291,35 @@ async function getInfo() {
 }
 getInfo()
 
+// 获取所有师傅的名字
+const installerName = ref([])
+const getName = async () => {
+    const name = await mdapi.query({
+        model: "installer",
+        fields: [
+            "nickname",
+        ]
+    })
+    installerName.value = name
+}
+
+getName()
+//根据师傅昵称查找installer_installer
+async function getinstaller() {
+    const installer = await mdapi.query({
+        model: "installer",
+        where: {
+            nickname: { _eq: changeForm.nickname },
+        },
+        fields: [
+            "nickname",
+            "order_progress{name installer_installer}"
+        ]
+    })
+    installer_installer.value = installer[0].order_progress[0].installer_installer
+
+    console.log(installer_installer.value);
+}
 
 </script>
   
@@ -295,6 +384,15 @@ getInfo()
         margin-right: 200px;
         width: 350px;
     }
+}
+
+//修改进度
+.change {
+    display: flex;
+
+    justify-content: flex-start;
+    margin-left: 93px;
+    padding-top: 20px;
 }
 
 // 订单进度
