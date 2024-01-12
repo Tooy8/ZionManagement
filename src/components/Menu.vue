@@ -7,10 +7,10 @@
         <el-menu-item index="1" style="margin-right: 105px;" @click="user">用户管理</el-menu-item>
         <el-menu-item index="2" @click="handleClick">订单管理</el-menu-item>
         <div class="flex-grow" />
-        <div class="avatar">
+        <!-- <div class="avatar">
             <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
             <div>admin</div>
-        </div>
+        </div> -->
     </el-menu>
     <!-- <router-view></router-view> -->
 </template>
