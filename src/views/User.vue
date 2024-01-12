@@ -180,6 +180,10 @@ const mdapi1 = zionMdapi1.init({
     url: "https://zion-app.functorz.com/zero/dK5wjNzKN12/api/graphql-v2",
     actionflow_id: "57a5b125-4af3-472f-b79d-f23c49c3831b",
 })
+// const mdapi1 = zionMdapi1.init({
+//     url: "https://zion-app.functorz.com/zero/omOJrPx6KDl/api/graphql-v2",
+//     actionflow_id: "2e2bea0f-43c0-4844-9bd3-75a06c889da9",
+// })
 
 //获取所有用户数据
 const tableData = ref([])

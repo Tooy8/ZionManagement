@@ -8,10 +8,12 @@
                 <el-form-item label="订单编号">
                     <el-input v-model="formInline.id" placeholder="请输入" clearable @clear="idClear" />
                 </el-form-item>
-                <!-- <el-form-item label="下单时间">
-                    <el-date-picker v-model="formInline.date" type="date" placeholder="请输入" clearable
-                        style="width: 280px;" />
-                </el-form-item> -->
+                <el-form-item label="下单时间">
+                    <!-- <el-date-picker v-model="formInline.date" type="month" placeholder="请输入" clearable
+                        style="width: 280px;" /> -->
+                    <el-date-picker v-model="formInline.date" type="daterange" range-separator="到"
+                        start-placeholder="开始（必填）" end-placeholder="结束（必填）" />
+                </el-form-item>
 
                 <el-form-item label="订单内容">
                     <el-input v-model="formInline.region" placeholder="请输入" clearable @clear="regionClear" />
@@ -99,6 +101,7 @@ const formInline = reactive({
     date: null,
     status: null
 })
+
 // 订单数据
 const tableData = ref([]);
 
@@ -195,9 +198,15 @@ const reset = () => {
 const search = () => {
     searchInfo()
 }
-
 //搜索某些数据
 async function searchInfo() {
+    //格式化时间
+    const dateArray = formInline.date; // 获取日期数组
+    const date1 = (dateArray && dateArray.length > 0) ? dateArray[0] : null; // 检查日期数组是否存在且不为空，若为空则设置为 null
+    const date2 = (dateArray && dateArray.length > 0) ? dateArray[1] : null;
+
+    const time1 = date1 ? dayjs(formInline.date[0]).format('YYYY-MM-DDTHH:mm:ss.SSSSSSZ') : null;
+    const time2 = date2 ? dayjs(formInline.date[1]).format('YYYY-MM-DDTHH:mm:ss.SSSSSSZ') : null;
     const order = await mdapi.nativeQuery({
         model: "order",
         where: {
@@ -205,6 +214,10 @@ async function searchInfo() {
             // created_at: { _eq: formInline.date },
             notes: { _eq: formInline.region },
             process_status: { _eq: formInline.status },
+            _and: [
+                { created_at: { _gt: time1 } },
+                { created_at: { _lt: time2 } }
+            ]
         },
         fields: [
             "created_at",

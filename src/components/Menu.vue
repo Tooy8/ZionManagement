@@ -4,7 +4,8 @@
         </el-menu-item> -->
         <img style="width: 92px;height: 92px;margin-left: 80px;" src="../assets/logo.png" />
         <p>安装服务管理后台</p>
-        <el-menu-item index="1" style="margin-right: 105px;" @click="user">用户管理</el-menu-item>
+        <el-menu-item index="0" style="margin-right: 105px;" @click="client">客户管理</el-menu-item>
+        <el-menu-item index="1" style="margin-right: 105px;" @click="user">师傅管理</el-menu-item>
         <el-menu-item index="2" @click="handleClick">订单管理</el-menu-item>
         <div class="flex-grow" />
         <!-- <div class="avatar">
@@ -31,6 +32,9 @@ const handleClick = () => {
 }
 const user = () => {
     router.push({ name: 'user', })
+}
+const client = () => {
+    router.push({ name: 'client', })
 
 }
 </script>

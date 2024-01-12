@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Login from '../views/Login.vue'
 import Order from '../views/Order.vue'
 import User from '../views/User.vue'
-
+import Client from '../views/Client.vue'
 
 import OrderManagement from '../components/OrderManagement.vue'
 import OrderDetails from '../components/OrderDetails.vue'
@@ -43,11 +43,17 @@ const router = createRouter({
         }
       ]
     },
-    // 用户
+    // 师傅
     {
       path: '/user',
       name: 'user',
       component: User
+    },
+    //客户
+    {
+      path: '/client',
+      name: 'client',
+      component: Client
     },
   ]
 })

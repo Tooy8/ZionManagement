@@ -13,8 +13,23 @@
                 <p>订单详情</p>
                 <el-button type="success">{{ orderStatus }}</el-button>
             </div>
-            <el-button type="primary" @click="centerDialogVisible = true" v-if="orderStatus !== '已完成'">结束订单</el-button>
+            <div>
+                <el-button type="primary" @click="verifyDialogVisible = true" v-if="orderStatus == '待确认'">确认订单</el-button>
+                <el-button type="primary" @click="centerDialogVisible = true" v-if="orderStatus !== '已结束'">结束订单</el-button>
+            </div>
 
+            <!-- 确认订单弹框 -->
+            <el-dialog v-model="verifyDialogVisible" width="30%" align-center center>
+                <span style="margin-left: 190px;font-size: 20px;">是否确认订单</span>
+                <template #footer>
+                    <span class="dialog-footer">
+                        <el-button @click="verifyDialogVisible = false">取消</el-button>
+                        <el-button type="primary" @click="verify">
+                            确认
+                        </el-button>
+                    </span>
+                </template>
+            </el-dialog>
             <!-- 结束订单弹框 -->
             <el-dialog v-model="centerDialogVisible" width="30%" align-center center>
                 <span style="margin-left: 190px;font-size: 20px;">是否确定完成订单</span>
@@ -174,6 +189,10 @@ async function searchInfo() {
             "appointment_time",
             "notes",
             "process_status",
+            "serve_status",
+            "evaluation_star_attitude",
+            "evaluation_star_professional",
+            "evaluation_star_speed",
             "evaluation_star",
             "evaluation_content",
             "order_detail{idx img{url}}"
@@ -184,7 +203,7 @@ async function searchInfo() {
     //订单信息
     orderInfo.value = order[0]
     //订单状态
-    orderStatus.value = orderInfo.value.process_status
+    orderStatus.value = orderInfo.value.serve_status
     // 评分
     mark.value = orderInfo.value.evaluation_star
     console.log(order);
@@ -198,6 +217,27 @@ const orderStatus = ref('')
 const mark = ref(4)
 //结束订单弹框 
 const centerDialogVisible = ref(false)
+// 确认订单弹框
+const verifyDialogVisible = ref(false)
+//确认订单操作
+const verify = () => {
+    verifyDialogVisible.value = false
+    orderStatus.value = '进行中'
+    //将数据库中的状态改成进行中
+    async function setStatus() {
+        const status = await mdapi.nativeMutation({
+            operation: "update_order",
+            where: {
+                id: { _eq: route.query.id },
+            },
+            _set: {
+                process_status: "进行中",
+                serve_status: "进行中"
+            }
+        })
+    }
+    setStatus()
+}
 //结束订单操作
 const finish = () => {
     centerDialogVisible.value = false
@@ -210,7 +250,8 @@ const finish = () => {
                 id: { _eq: route.query.id },
             },
             _set: {
-                process_status: "已完成"
+                process_status: "已完成",
+                serve_status: "已结束"
             }
         })
     }
